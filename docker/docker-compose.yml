@@ -8,12 +8,12 @@ services:
       INDY_SEED: ${AGENT_WALLET_SEED}
       SITE_URL: ${SITE_URL}
       WEBHOOK_URL: "http://email-verifier-service:8080/webhooks"
-      ACAPY_LABEL: "BC Email Verifier"
-      ACAPY_ENDPOINT: ${SITE_URL}
+      ACAPY_LABEL: "CVEX Email Verifier"
+      ACAPY_ENDPOINT: http://192.168.0.5:10000
       ACAPY_WALLET_SEED: ${AGENT_WALLET_SEED}
       ACAPY_GENESIS_URL: "http://test.bcovrin.vonx.io/genesis"
       ACAPY_WALLET_TYPE: "indy"
-      ACAPY_WALLET_NAME: "bc_email_verifier"
+      ACAPY_WALLET_NAME: "cvex_email_verifier"
       ACAPY_WALLET_KEY: "walletkey"
       ACAPY_AUTO_ACCEPT_INVITES: "true"
       ACAPY_AUTO_ACCEPT_REQUESTS: "true"
@@ -29,11 +29,12 @@ services:
     command: [
         "-c",
         "curl -d '{\"seed\":\"${AGENT_WALLET_SEED}\", \"role\":\"TRUST_ANCHOR\", \"alias\":\"BC Email Verifier (Docker)\"}' -X POST http://test.bcovrin.vonx.io/register; \
-        sleep 5; \
+        sleep 15; \
         aca-py start \
         -it http '0.0.0.0' 10000 \
         -ot http \
-        --admin '0.0.0.0' 5000",
+        --admin '0.0.0.0' 5000 \
+        --replace-public-did",
       ]
 
   email-verifier-service:
@@ -59,7 +60,7 @@ services:
       APP_HOME: "email_verification_service"
       WEB_CONCURRENCY: 1
     ports:
-      - 8080:8080
+      - "8080:8080"
     # command: bash -c "sleep 5 && ./manage.py makemigrations &&./manage.py migrate && ./manage.py runserver 0.0.0.0:$${PORT}"
     command: >
       bash -c "

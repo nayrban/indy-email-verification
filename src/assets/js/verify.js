@@ -1,6 +1,8 @@
-var iOS = !!navigator.platform && /iPad|iPhone|iPod/.test(navigator.platform);
-var Android = !!navigator.platform && /Android|Linux|Linux armv6l|Linux armv7l/.test(navigator.platform);
+const userAgent = navigator.userAgent || navigator.vendor;
 
-if (iOS || Android) {
+const iOS =  /iPad|iPhone|iPod/i.test(userAgent);
+const Android = /Android/i.test(userAgent);
+
+if (__didcomm_url && (iOS || Android)) {
   window.location = __didcomm_url;
 }

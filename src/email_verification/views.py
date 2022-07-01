@@ -41,10 +41,16 @@ def submit(request):
     if request.method == "POST":
         form = EmailForm(request.POST)
         if form.is_valid():
+            print("Form content")
+            print(form)
 
-            response = requests.post(f"{AGENT_URL}/connections/create-invitation",headers={"x-api-key": API_KEY})
+            print("Request")
+            print(request)
+            response = requests.post(f"{AGENT_URL}/connections/create-invitation", headers={"x-api-key": API_KEY})
             invite = response.json()
 
+            print("Invite")
+            print(invite)
             connection_id = invite["connection_id"]
             invite_url = invite["invitation_url"]
 
@@ -59,8 +65,8 @@ def submit(request):
             template = loader.get_template("email.html")
             email_html = template.render({"redirect_url": redirect_url}, request)
 
-            send_mail(
-                "BC Email Verification Invite",
+            was_sent = send_mail(
+                "CVEX Email Verification Invite",
                 (
                     "Follow this link to connect with our "
                     f"verification service: {redirect_url}"
@@ -70,6 +76,9 @@ def submit(request):
                 fail_silently=False,
                 html_message=email_html,
             )
+
+            print(redirect_url)
+            print(was_sent)
 
             SessionState.objects.get_or_create(
                 connection_id=connection_id, state="invite-created"
@@ -111,10 +120,22 @@ def in_progress(request, connection_id):
 
 
 def verify_redirect(request, connection_id):
+    print("Request")
+    print(request)
+    print("Connection Id")
+    print(connection_id)
     verification = get_object_or_404(Verification, connection_id=connection_id)
-    invitation_url = verification.invite_url
+    invitation_url = verification.invite_url.replace("null", "http://192.168.0.5:10000")
+
+    print("verification")
+    print(verification)
+    print("invitation_url")
+    print(invitation_url)
 
     didcomm_url = re.sub(r"^https?:\/\/\S*\?", "didcomm://invite?", invitation_url)
+
+    print("didcomm_url")
+    print(didcomm_url)
 
     template = loader.get_template("verify.html")
 
@@ -176,6 +197,11 @@ def webhooks(request, topic):
                     {
                         "name": "email",
                         "value": verification.email,
+                        "mime-type": "text/plain",
+                    },
+                    {
+                        "name": "name",
+                        "value": verification.name,
                         "mime-type": "text/plain",
                     },
                     {

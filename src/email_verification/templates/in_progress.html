@@ -37,7 +37,7 @@
             state = await response.json();
             console.log(state)
 
-            if(state["state"] == 'offer-sent') {
+            if(state["state"] === 'offer-sent') {
               el = document.querySelector('#connection-request-sent');
               el.style.display = 'none';
 
@@ -46,7 +46,7 @@
 
               el = document.querySelector('#offer-sending');
               el.style.display = 'block';
-            } else if (state["state"] == 'credential-issued') {
+            } else if (state["state"] === 'credential-issued') {
               el = document.querySelector('#connection-request-sent');
               el.style.display = 'none';
 
@@ -60,6 +60,8 @@
               el.textContent = state["email"]
 
               clearInterval(interval)
+            } else {
+              console.log("Still waiting for a change in the state")
             }
             
           } catch (e) {

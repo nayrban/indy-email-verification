@@ -2,7 +2,6 @@ from django import forms
 
 from .models import Verification
 
-
 class BaseForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BaseForm, self).__init__(*args, **kwargs)
@@ -13,4 +12,4 @@ class BaseForm(forms.ModelForm):
 class EmailForm(BaseForm):
     class Meta:
         model = Verification
-        fields = ["email"]
+        fields = ["name", "email"]

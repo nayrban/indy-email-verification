@@ -15,6 +15,7 @@ class Migration(migrations.Migration):
             name='Verification',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('name', models.CharField(max_length=100)),
                 ('email', models.EmailField(max_length=100)),
                 ('connection_id', models.UUIDField()),
                 ('invite_url', models.URLField()),

@@ -13,6 +13,7 @@ AGENT_URL = os.environ.get("AGENT_URL")
 
 API_KEY = os.environ.get("AGENT_ADMIN_API_KEY", "")
 
+
 class EmailVerificationConfig(AppConfig):
     name = "email_verification"
 
@@ -27,8 +28,8 @@ class EmailVerificationConfig(AppConfig):
         if cache.get("credential_definition_id") is None:
             schema_body = {
                 "schema_name": "verified-email",
-                "schema_version": "1.2.3",
-                "attributes": ["email", "time"],
+                "schema_version": "1.2.4",
+                "attributes": ["email", "name", "time"],
             }
             schema_response = requests.post(f"{AGENT_URL}/schemas", headers={"x-api-key": API_KEY}, json=schema_body)
 
